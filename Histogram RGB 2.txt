@@ -1,0 +1,40 @@
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <iostream>
+using namespace std;
+using namespace cv;
+int main() {
+	Mat image = imread("C:/Users/MAHESA/Documents/Visual Studio 2015/Projects/ConsoleApplication12/data/0.jpeg");
+	int HistR[257] = { 0 };
+	int HistG[257] = { 0 };
+	int HistB[257] = { 0 };
+	for (int i = 0; i < image.rows; i++)
+		for (int j = 0; j < image.cols; j++)
+		{
+			Vec3b intensity = image.at<Vec3b>(Point(j, i));
+			int Red = intensity.val[0];
+			int Green = intensity.val[1];
+			int Blue = intensity.val[2];
+			HistR[Red] = HistR[Red] + 1;
+			HistB[Blue] = HistB[Blue] + 1;
+			HistG[Green] = HistG[Green] + 1;
+		}
+	Mat HistPlotR(500, 256, CV_8UC3, Scalar(0, 0, 0));
+	Mat HistPlotG(500, 256, CV_8UC3, Scalar(0, 0, 0));
+	Mat HistPlotB(500, 256, CV_8UC3, Scalar(0, 0, 0));
+	for (int i = 0; i < 256; i = i + 2)
+	{
+		line(HistPlotR, Point(i, 500), Point(i, 500 - HistR[i]), Scalar(0, 0, 255), 1, 8, 0);
+		line(HistPlotG, Point(i, 500), Point(i, 500 - HistG[i]), Scalar(0, 255, 0), 1, 8, 0);
+		line(HistPlotB, Point(i, 500), Point(i, 500 - HistB[i]), Scalar(255, 0, 0), 1, 8, 0);
+	}
+	namedWindow("Red Histogram");
+	namedWindow("Green Histogram");
+	namedWindow("Blue Histogram");
+	imshow("Red Histogram", HistPlotR);
+	imshow("Green Histogram", HistPlotG);
+	imshow("Blue Histogram", HistPlotB);
+	waitKey(0);
+	return 0;
+}
